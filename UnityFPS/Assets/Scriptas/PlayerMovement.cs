@@ -29,6 +29,7 @@ public class PlayerMovement : MonoBehaviour
     private bool shouldCrouch => Input.GetKeyDown(crouchKey) && !duringCrouchingAnimation && controller.isGrounded;
     private bool isGrounded;
     private bool isMoving = false;
+    private bool isSprinting = false;
     private KeyCode crouchKey = KeyCode.LeftControl;
 
     private void HandleCrouch()
@@ -115,15 +116,17 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKey(KeyCode.LeftShift) & isMoving == true & isCrouching == false)
         {
+            isSprinting = true;
             speed = 20f;
         }
 
         else if(isCrouching == false)
         {
+            isSprinting = false;
             speed = 12f;
         }
 
-        if(isMoving == true)
+        if(isMoving == true & isSprinting == true)
         {
 
            arm.transform.localRotation = Quaternion.Euler(-111.882f, 96.085f, -162.151f);

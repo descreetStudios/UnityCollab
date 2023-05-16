@@ -7,11 +7,13 @@ public class Shooting : MonoBehaviour
 
     public float damage = 10f;
     public float range = 100f;
-
     private float timer = 0f;
-
+    private float impactForce = 60f;
+   // private PlayerMovement speed;
     public Camera fpsCam;
     public ParticleSystem muzzleFlash;
+
+    public GameObject impactEffect;
 
     private bool canShoot = true;
     private float cooldown = 0.175f;
@@ -45,7 +47,7 @@ public class Shooting : MonoBehaviour
         RaycastHit hit;
        if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, range))
         {
-            //Debug.Log(hit.transform.name);
+            Debug.Log(hit.transform.name);
 
             Target target = hit.transform.GetComponent<Target>();
             if(target != null)
@@ -53,6 +55,19 @@ public class Shooting : MonoBehaviour
                 target.TakeDamage(damage);
                 //Debug.Log("Dealed Damage");
             }
+
+            if (hit.rigidbody != null)
+            {
+                hit.rigidbody.AddForce(-hit.normal * impactForce);
+            }
+
+            if (hit.transform.name != "First Person Player")
+            {
+               GameObject impactGO = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
+               Destroy(impactGO, 2f);
+            }
+            
+
         }
         
     }
